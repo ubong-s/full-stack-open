@@ -25,8 +25,6 @@ const App = () => {
       setFilteredCountries(tempCountries);
    };
 
-   console.log('countries', countries);
-
    useEffect(() => {
       fetchCountries();
    }, []);
