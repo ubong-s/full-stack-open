@@ -43,7 +43,12 @@ const App = () => {
          ) : filteredCountries.length === 1 ? (
             <SingleCountry country={filteredCountries[0]} />
          ) : (
-            searchQuery && <Countries countries={filteredCountries} />
+            searchQuery && (
+               <Countries
+                  countries={filteredCountries}
+                  setFilteredCountries={setFilteredCountries}
+               />
+            )
          )}
       </>
    );
