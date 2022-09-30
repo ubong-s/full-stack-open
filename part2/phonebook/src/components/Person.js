@@ -1,8 +1,9 @@
-const Person = ({ name, number }) => {
+const Person = ({ person: { id, name, number }, deletePerson }) => {
    return (
-      <p>
-         {name} {number}
-      </p>
+      <div>
+         {name} {number}{' '}
+         <button onClick={() => deletePerson(id)}>delete</button>
+      </div>
    );
 };
 

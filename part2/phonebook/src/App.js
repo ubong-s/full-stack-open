@@ -11,7 +11,7 @@ const App = () => {
    const [newNumber, setNewNumber] = useState('');
    const [search, setSearch] = useState('');
 
-   const addNumber = (e) => {
+   const addPerson = (e) => {
       e.preventDefault();
 
       const newPerson = {
@@ -36,12 +36,26 @@ const App = () => {
       }
    };
 
-   const handleNameChange = (e) => {
-      setNewName(e.target.value);
+   const deletePerson = (id) => {
+      const tempPerson = persons.find((person) => person.id === id);
+      if (window.confirm(`Delete ${tempPerson.name}`)) {
+         phonebookService.remove(id).then(() => {
+            setPersons((prev) => prev.filter((p) => p.id !== tempPerson.id));
+            setFilteredPersons((prev) =>
+               prev.filter((p) => p.id !== tempPerson.id)
+            );
+         });
+      }
    };
 
-   const handleNumberChange = (e) => {
-      setNewNumber(e.target.value);
+   const handleChange = (e) => {
+      if (e.target.name === 'name') {
+         setNewName(e.target.value);
+      }
+
+      if (e.target.name === 'number') {
+         setNewNumber(e.target.value);
+      }
    };
 
    const handleFilter = (e) => {
@@ -66,14 +80,13 @@ const App = () => {
          <Filter search={search} handleFilter={handleFilter} />
          <h3>Add a new</h3>
          <PersonForm
-            handleSubmit={addNumber}
+            handleSubmit={addPerson}
             newName={newName}
             newNumber={newNumber}
-            handleNameChange={handleNameChange}
-            handleNumberChange={handleNumberChange}
+            handleChange={handleChange}
          />
          <h2>Numbers</h2>
-         <Persons persons={filteredPersons} />
+         <Persons persons={filteredPersons} deletePerson={deletePerson} />
       </div>
    );
 };
