@@ -3,6 +3,12 @@ import axios from 'axios';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+const baseUrl = 'http://localhost:3001/persons';
+
+const create = (newObject) => {
+   const request = axios.post(baseUrl, newObject);
+   return request.then((response) => response.data);
+};
 
 const App = () => {
    const [persons, setPersons] = useState([]);
@@ -11,12 +17,14 @@ const App = () => {
    const [newNumber, setNewNumber] = useState('');
    const [search, setSearch] = useState('');
 
-   const generateId = () => Math.max(...persons.map((person) => person.id)) + 1;
-
-   const handleSubmit = (e) => {
+   const addNumber = (e) => {
       e.preventDefault();
 
-      const newPerson = { name: newName, number: newNumber, id: generateId() };
+      const newPerson = {
+         name: newName,
+         number: newNumber,
+         id: persons.length + 1,
+      };
 
       const doesNameExists = persons.find(
          (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
@@ -25,10 +33,12 @@ const App = () => {
       if (doesNameExists) {
          alert(`${newName} is already added to phonebook`);
       } else if (newName && newNumber) {
-         setPersons(persons.concat(newPerson));
-         setFilteredPersons(persons.concat(newPerson));
-         setNewName('');
-         setNewNumber('');
+         create(newPerson).then((returnedPerson) => {
+            setPersons(persons.concat(returnedPerson));
+            setFilteredPersons(persons.concat(returnedPerson));
+            setNewName('');
+            setNewNumber('');
+         });
       }
    };
 
@@ -50,7 +60,7 @@ const App = () => {
    };
 
    useEffect(() => {
-      axios.get('http://localhost:3001/persons').then((response) => {
+      axios.get(baseUrl).then((response) => {
          setPersons(response.data);
          setFilteredPersons(response.data);
       });
@@ -62,7 +72,7 @@ const App = () => {
          <Filter search={search} handleFilter={handleFilter} />
          <h3>Add a new</h3>
          <PersonForm
-            handleSubmit={handleSubmit}
+            handleSubmit={addNumber}
             newName={newName}
             newNumber={newNumber}
             handleNameChange={handleNameChange}
