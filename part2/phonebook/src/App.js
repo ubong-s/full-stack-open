@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import phonebookService from './services/phonebook';
@@ -10,6 +11,7 @@ const App = () => {
    const [newName, setNewName] = useState('');
    const [newNumber, setNewNumber] = useState('');
    const [search, setSearch] = useState('');
+   const [message, setMessage] = useState({ type: '', text: '' });
 
    const addPerson = (e) => {
       e.preventDefault();
@@ -50,12 +52,21 @@ const App = () => {
                            : person
                      )
                   );
+                  setMessage({
+                     type: 'success',
+                     text: `Updated ${returnedPerson.name}`,
+                  });
                });
          }
       } else if (newName && newNumber) {
+         console.log('Test');
          phonebookService.create(newPerson).then((returnedPerson) => {
             setPersons(persons.concat(returnedPerson));
             setFilteredPersons(persons.concat(returnedPerson));
+            setMessage({
+               type: 'success',
+               text: `Added ${returnedPerson.name}`,
+            });
          });
       }
 
@@ -101,9 +112,20 @@ const App = () => {
       });
    }, []);
 
+   useEffect(() => {
+      const timeout = setTimeout(() => {
+         setMessage({ type: '', text: '' });
+      }, 3000);
+
+      return () => {
+         clearTimeout(timeout);
+      };
+   }, [message.text]);
+
    return (
       <div>
          <h2>Phonebook</h2>
+         <Notification message={message} />
          <Filter search={search} handleFilter={handleFilter} />
          <h3>Add a new</h3>
          <PersonForm
