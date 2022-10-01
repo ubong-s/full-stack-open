@@ -11,7 +11,7 @@ const App = () => {
    const [newName, setNewName] = useState('');
    const [newNumber, setNewNumber] = useState('');
    const [search, setSearch] = useState('');
-   const [message, setMessage] = useState({ type: '', text: '' });
+   const [errorMessage, setErrorMessage] = useState({ type: '', text: '' });
 
    const addPerson = (e) => {
       e.preventDefault();
@@ -52,7 +52,7 @@ const App = () => {
                            : person
                      )
                   );
-                  setMessage({
+                  setErrorMessage({
                      type: 'success',
                      text: `Updated ${returnedPerson.name}`,
                   });
@@ -63,7 +63,7 @@ const App = () => {
          phonebookService.create(newPerson).then((returnedPerson) => {
             setPersons(persons.concat(returnedPerson));
             setFilteredPersons(persons.concat(returnedPerson));
-            setMessage({
+            setErrorMessage({
                type: 'success',
                text: `Added ${returnedPerson.name}`,
             });
@@ -77,12 +77,20 @@ const App = () => {
    const deletePerson = (id) => {
       const tempPerson = persons.find((person) => person.id === id);
       if (window.confirm(`Delete ${tempPerson.name}`)) {
-         phonebookService.remove(id).then(() => {
-            setPersons((prev) => prev.filter((p) => p.id !== tempPerson.id));
-            setFilteredPersons((prev) =>
-               prev.filter((p) => p.id !== tempPerson.id)
-            );
-         });
+         phonebookService
+            .remove(id)
+            .then(() => {
+               setPersons((prev) => prev.filter((p) => p.id !== tempPerson.id));
+               setFilteredPersons((prev) =>
+                  prev.filter((p) => p.id !== tempPerson.id)
+               );
+            })
+            .catch((error) => {
+               setErrorMessage({
+                  type: 'error',
+                  text: `Information of ${tempPerson.name} has already been removed from the server`,
+               });
+            });
       }
    };
 
@@ -114,18 +122,18 @@ const App = () => {
 
    useEffect(() => {
       const timeout = setTimeout(() => {
-         setMessage({ type: '', text: '' });
+         setErrorMessage({ type: '', text: '' });
       }, 3000);
 
       return () => {
          clearTimeout(timeout);
       };
-   }, [message.text]);
+   }, [errorMessage.text]);
 
    return (
       <div>
          <h2>Phonebook</h2>
-         <Notification message={message} />
+         <Notification message={errorMessage} />
          <Filter search={search} handleFilter={handleFilter} />
          <h3>Add a new</h3>
          <PersonForm
