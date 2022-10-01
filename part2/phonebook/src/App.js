@@ -24,16 +24,43 @@ const App = () => {
          (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
       );
 
-      if (doesNameExists) {
-         alert(`${newName} is already added to phonebook`);
+      if (doesNameExists && newNumber) {
+         if (
+            window.confirm(
+               `${newName} is already added to phonebook, replace the old number with a new one?`
+            )
+         ) {
+            phonebookService
+               .update(doesNameExists.id, {
+                  ...newPerson,
+                  id: doesNameExists.id,
+               })
+               .then((returnedPerson) => {
+                  setPersons((prev) =>
+                     prev.map((person) =>
+                        person.id === returnedPerson.id
+                           ? returnedPerson
+                           : person
+                     )
+                  );
+                  setFilteredPersons((prev) =>
+                     prev.map((person) =>
+                        person.id === returnedPerson.id
+                           ? returnedPerson
+                           : person
+                     )
+                  );
+               });
+         }
       } else if (newName && newNumber) {
          phonebookService.create(newPerson).then((returnedPerson) => {
             setPersons(persons.concat(returnedPerson));
             setFilteredPersons(persons.concat(returnedPerson));
-            setNewName('');
-            setNewNumber('');
          });
       }
+
+      setNewName('');
+      setNewNumber('');
    };
 
    const deletePerson = (id) => {
