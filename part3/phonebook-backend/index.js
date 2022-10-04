@@ -71,7 +71,19 @@ const generateId = () => Math.floor(Math.random() * 100000);
 app.post('/api/persons', (request, response) => {
    const { body } = request;
 
-   console.log(body);
+   if (!body.name || !body.number) {
+      return response.status(400).json({
+         error: 'name/number is missing',
+      });
+   }
+
+   const doesNameExist = persons.find(
+      (p) => p.name.toLowerCase() === body.name.toLowerCase()
+   );
+
+   if (doesNameExist) {
+      return response.status(400).json({ error: 'name must be unique' });
+   }
 
    const person = {
       id: generateId(),
