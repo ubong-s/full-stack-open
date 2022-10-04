@@ -50,6 +50,20 @@ app.get('/api/persons/:id', (request, response) => {
    response.status(200).json(person);
 });
 
+app.delete('/api/persons/:id', (request, response) => {
+   const { id } = request.params;
+
+   const person = persons.find((p) => p.id === Number(id));
+
+   if (!person) {
+      return response.status(404).send('Resource does not exist');
+   }
+
+   persons = persons.filter((n) => n.id !== Number(id));
+
+   response.status(204).end();
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
    console.log(`Server is running on port ${PORT}`);
