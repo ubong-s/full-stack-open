@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const app = express();
 
+app.use(express.static('build'));
 app.use(express.json());
 app.use(cors());
 
@@ -41,10 +42,6 @@ let persons = [
       number: '39-23-6423122',
    },
 ];
-
-app.get('/', (request, response) => {
-   response.send(`<h1>Phonebook Backend</h1>`);
-});
 
 app.get('/info', (request, response) => {
    response.send(`<p>Phonebook has info for ${persons.length} people</p>
