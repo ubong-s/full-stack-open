@@ -19,47 +19,47 @@ const App = () => {
       const newPerson = {
          name: newName,
          number: newNumber,
-         id: persons.length + 1,
       };
 
-      const doesNameExists = persons.find(
-         (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
-      );
+      // const doesNameExists = persons.find(
+      //    (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+      // );
 
-      if (doesNameExists && newNumber) {
-         if (
-            window.confirm(
-               `${newName} is already added to phonebook, replace the old number with a new one?`
-            )
-         ) {
-            phonebookService
-               .update(doesNameExists.id, {
-                  ...newPerson,
-                  id: doesNameExists.id,
-               })
-               .then((returnedPerson) => {
-                  setPersons((prev) =>
-                     prev.map((person) =>
-                        person.id === returnedPerson.id
-                           ? returnedPerson
-                           : person
-                     )
-                  );
-                  setFilteredPersons((prev) =>
-                     prev.map((person) =>
-                        person.id === returnedPerson.id
-                           ? returnedPerson
-                           : person
-                     )
-                  );
-                  setErrorMessage({
-                     type: 'success',
-                     text: `Updated ${returnedPerson.name}`,
-                  });
-               });
-         }
-      } else if (newName && newNumber) {
-         console.log('Test');
+      // if (doesNameExists && newNumber) {
+      //    if (
+      //       window.confirm(
+      //          `${newName} is already added to phonebook, replace the old number with a new one?`
+      //       )
+      //    ) {
+      //       phonebookService
+      //          .update(doesNameExists.id, {
+      //             ...newPerson,
+      //             id: doesNameExists.id,
+      //          })
+      //          .then((returnedPerson) => {
+      //             setPersons((prev) =>
+      //                prev.map((person) =>
+      //                   person.id === returnedPerson.id
+      //                      ? returnedPerson
+      //                      : person
+      //                )
+      //             );
+      //             setFilteredPersons((prev) =>
+      //                prev.map((person) =>
+      //                   person.id === returnedPerson.id
+      //                      ? returnedPerson
+      //                      : person
+      //                )
+      //             );
+      //             setErrorMessage({
+      //                type: 'success',
+      //                text: `Updated ${returnedPerson.name}`,
+      //             });
+      //          });
+      //    }
+      // }
+
+      if (newName && newNumber) {
          phonebookService.create(newPerson).then((returnedPerson) => {
             setPersons(persons.concat(returnedPerson));
             setFilteredPersons(persons.concat(returnedPerson));
