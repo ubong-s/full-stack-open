@@ -6,10 +6,6 @@ const Person = require('./models/person');
 
 const app = express();
 
-app.use(express.static('build'));
-app.use(express.json());
-app.use(cors());
-
 morgan.token('body', function (request, response) {
    if (request.method === 'POST') {
       return JSON.stringify(request.body);
@@ -18,9 +14,12 @@ morgan.token('body', function (request, response) {
    return ' ';
 });
 
+app.use(express.json());
 app.use(
    morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
+app.use(cors());
+app.use(express.static('build'));
 
 let persons = [
    {
@@ -57,28 +56,24 @@ app.get('/api/persons', (request, response) => {
    });
 });
 
-app.get('/api/persons/:id', (request, response) => {
-   const { id } = request.params;
-
-   const person = persons.find((p) => p.id === Number(id));
-
-   if (!person) {
-      return response.status(404).send('Resource does not exist');
-   }
-
-   response.status(200).json(person);
+app.get('/api/persons/:id', (request, response, next) => {
+   Person.findById(request.params.id)
+      .then((person) => {
+         if (person) {
+            response.json(person);
+         } else {
+            response.status(404).end;
+         }
+      })
+      .catch((error) => next(error));
 });
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
    Person.findByIdAndRemove(request.params.id)
       .then((result) => {
          response.status(204).end();
       })
-      .catch((error) => {
-         console.log(error.message);
-
-         response.status(500).json({ error: 'malformatted id' });
-      });
+      .catch((error) => next(error));
 });
 
 // const generateId = () => Math.floor(Math.random() * 100000);
@@ -115,6 +110,16 @@ const unknownEndpoint = (request, response) => {
 };
 
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+   console.log(error.message);
+
+   if (error.name === 'CastError') {
+      response.status(500).json({ error: 'malformatted id' });
+   }
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
