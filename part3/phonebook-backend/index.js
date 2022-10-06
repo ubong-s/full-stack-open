@@ -70,17 +70,15 @@ app.get('/api/persons/:id', (request, response) => {
 });
 
 app.delete('/api/persons/:id', (request, response) => {
-   const { id } = request.params;
+   Person.findByIdAndRemove(request.params.id)
+      .then((result) => {
+         response.status(204).end();
+      })
+      .catch((error) => {
+         console.log(error.message);
 
-   const person = persons.find((p) => p.id === Number(id));
-
-   if (!person) {
-      return response.status(404).send('Resource does not exist');
-   }
-
-   persons = persons.filter((n) => n.id !== Number(id));
-
-   response.status(204).end();
+         response.status(500).json({ error: 'malformatted id' });
+      });
 });
 
 // const generateId = () => Math.floor(Math.random() * 100000);
