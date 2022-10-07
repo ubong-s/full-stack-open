@@ -19,7 +19,27 @@ const personSchema = new mongoose.Schema({
       minLength: [3, 'Name must be 3+ characters'],
       required: true,
    },
-   number: String,
+   number: {
+      type: String,
+      validate: {
+         validator: function (v) {
+            let validator =
+               (v[2] === '-' || v[3] === '-') && /\d{2,3}-\d{7,8}/.test(v);
+
+            return validator;
+         },
+         message: `number should be in this format "XX-XXXXXXX" or "XXX-XXXXXXXX"!`,
+      },
+      minLength: [
+         8,
+         `number should be in this format "XX-XXXXXXX" or "XXX-XXXXXXXX"!`,
+      ],
+      maxLength: [
+         12,
+         `"XX-XXXXXXX" or "XXX-XXXXXXXX" and max characters is 12!`,
+      ],
+      required: true,
+   },
 });
 
 personSchema.set('toJSON', {

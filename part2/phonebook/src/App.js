@@ -52,6 +52,14 @@ const App = () => {
                      type: 'success',
                      text: `Updated ${returnedPerson.name}`,
                   });
+                  setNewName('');
+                  setNewNumber('');
+               })
+               .catch((error) => {
+                  setMessage({
+                     type: 'error',
+                     text: error.response.data.error,
+                  });
                });
          }
       } else {
@@ -64,18 +72,16 @@ const App = () => {
                   type: 'success',
                   text: `Added ${returnedPerson.name}`,
                });
+               setNewName('');
+               setNewNumber('');
             })
             .catch((error) => {
-               console.log(error);
                setMessage({
                   type: 'error',
                   text: error.response.data.error,
                });
             });
       }
-
-      setNewName('');
-      setNewNumber('');
    };
 
    const deletePerson = (id) => {
@@ -119,7 +125,7 @@ const App = () => {
    useEffect(() => {
       const timeout = setTimeout(() => {
          setMessage({ type: '', text: '' });
-      }, 3000);
+      }, 6000);
 
       return () => {
          clearTimeout(timeout);
