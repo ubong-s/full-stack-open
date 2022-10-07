@@ -8,7 +8,8 @@
       "dev": "nodemon index.js",
       "test": "echo \"Error: no test specified\" && exit 1",
       "deploy": "fly deploy",
-      "logs:prod": "fly logs"
+      "logs:prod": "fly logs",
+      "lint": "eslint ."
    },
    "keywords": [],
    "author": "",
@@ -19,5 +20,8 @@
       "express": "^4.18.1",
       "mongoose": "^6.6.5",
       "morgan": "^1.10.0"
+   },
+   "devDependencies": {
+      "eslint": "^8.24.0"
    }
 }

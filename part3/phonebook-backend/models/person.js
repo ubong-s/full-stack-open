@@ -6,7 +6,7 @@ console.log('connecting to', url);
 
 mongoose
    .connect(url)
-   .then((result) => {
+   .then(() => {
       console.log('connected to MongoDB');
    })
    .catch((error) => {
@@ -28,14 +28,17 @@ const personSchema = new mongoose.Schema({
 
             return validator;
          },
+         // eslint-disable-next-line
          message: `number should be in this format "XX-XXXXXXX" or "XXX-XXXXXXXX"!`,
       },
       minLength: [
          8,
+         // eslint-disable-next-line
          `number should be in this format "XX-XXXXXXX" or "XXX-XXXXXXXX"!`,
       ],
       maxLength: [
          12,
+         // eslint-disable-next-line
          `"XX-XXXXXXX" or "XXX-XXXXXXXX" and max characters is 12!`,
       ],
       required: true,
