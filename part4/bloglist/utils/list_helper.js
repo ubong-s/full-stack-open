@@ -1,3 +1,5 @@
+const lodash = require('lodash');
+
 // eslint-disable-next-line
 const dummy = (blogs) => {
    return 1;
@@ -24,4 +26,20 @@ const favoriteBlog = (blogs) => {
    return blogs.length > 0 ? result : null;
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+const mostBlogs = (blogs) => {
+   let result = {};
+   if (blogs.length > 0) {
+      const authorCount = lodash.countBy(blogs, 'author');
+
+      const authorWithMostArticles = Object.keys(authorCount).reduce((a, b) => {
+         return authorCount[a] > authorCount[b] ? a : b;
+      });
+
+      result.author = authorWithMostArticles;
+      result.blogs = authorCount[authorWithMostArticles];
+   }
+
+   return blogs.length > 0 ? result : null;
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };

@@ -96,13 +96,49 @@ describe('favorite blog', () => {
       expect(result).toBe(null);
    });
 
-   test('should return favorite blog from multipleblogs', () => {
+   test('should return favorite from blog list of one', () => {
+      const result = listHelper.favoriteBlog(listWithOneBlog);
+
+      expect(result).toEqual({
+         title: 'Go To Statement Considered Harmful',
+         author: 'Edsger W. Dijkstra',
+         likes: 5,
+      });
+   });
+
+   test('should return favorite blog from multiple blogs', () => {
       const result = listHelper.favoriteBlog(listWithMultipleBlogs);
 
       expect(result).toEqual({
          title: 'Canonical string reduction',
          author: 'Edsger W. Dijkstra',
          likes: 12,
+      });
+   });
+});
+
+describe('most blogs', () => {
+   test('most blogs from an author when list has zero blogs', () => {
+      const result = listHelper.mostBlogs(listWithZeroBlog);
+
+      expect(result).toBe(null);
+   });
+
+   test('most blogs from an author when list one blog', () => {
+      const result = listHelper.mostBlogs(listWithOneBlog);
+
+      expect(result).toEqual({
+         author: 'Edsger W. Dijkstra',
+         blogs: 1,
+      });
+   });
+
+   test('most blogs from an author when list has many blogs', () => {
+      const result = listHelper.mostBlogs(listWithMultipleBlogs);
+
+      expect(result).toEqual({
+         author: 'Robert C. Martin',
+         blogs: 3,
       });
    });
 });
