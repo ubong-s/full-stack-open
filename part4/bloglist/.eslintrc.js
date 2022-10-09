@@ -3,11 +3,12 @@ module.exports = {
       node: true,
       commonjs: true,
       es2021: true,
+      jest: true,
    },
    extends: 'eslint:recommended',
    overrides: [],
    parserOptions: {
-      ecmaVersion: 'latest',
+      ecmaVersion: 12,
    },
    rules: {
       indent: ['error', 3],
