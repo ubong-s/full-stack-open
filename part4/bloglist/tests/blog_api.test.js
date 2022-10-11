@@ -19,6 +19,15 @@ test('blogs are returned as JSON and correct length returned', async () => {
    expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
+test('id to be defined instead of "_id"', async () => {
+   const response = await api.get('/api/blogs');
+
+   response.body.map((blog) => {
+      expect(blog._id).not.toBeDefined();
+      expect(blog.id).toBeDefined();
+   });
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
