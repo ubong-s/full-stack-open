@@ -101,6 +101,36 @@ test('deleting a blog', async () => {
    expect(titles).not.toContain(blogToDelete.title);
 });
 
+test('updating a blog', async () => {
+   const blogsAtStart = await helper.blogsInDb();
+
+   const blogToUpdate = blogsAtStart[0];
+
+   const blogObject = {
+      ...blogToUpdate,
+      title: 'uboho is trying 2',
+      author: 'uboho',
+      url: 'uboho-is-trying-2',
+   };
+
+   await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogObject)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+   const blogsAtEnd = await helper.blogsInDb();
+   const updatedBlog = blogsAtEnd[0];
+
+   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+   expect(updatedBlog).toEqual({
+      ...blogToUpdate,
+      title: 'uboho is trying 2',
+      author: 'uboho',
+      url: 'uboho-is-trying-2',
+   });
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
