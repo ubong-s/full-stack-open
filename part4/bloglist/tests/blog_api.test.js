@@ -86,6 +86,21 @@ test('verifies that backend responds with status of 400 if title/url is missing'
    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 });
 
+test('deleting a blog', async () => {
+   const blogsAtStart = await helper.blogsInDb();
+   const blogToDelete = blogsAtStart[0];
+
+   await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+   const blogsAtEnd = await helper.blogsInDb();
+
+   expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+
+   const titles = blogsAtEnd.map((b) => b.title);
+
+   expect(titles).not.toContain(blogToDelete.title);
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
