@@ -74,6 +74,18 @@ test('verifies that default likes is 0 when not provided', async () => {
    expect(blogToView.likes).toBe(0);
 });
 
+test('verifies that backend responds with status of 400 if title/url is missing', async () => {
+   const newBlog = {
+      author: 'Matt IIves',
+   };
+
+   await api.post('/api/blogs').send(newBlog).expect(400);
+
+   const blogsAtEnd = await helper.blogsInDb();
+
+   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
