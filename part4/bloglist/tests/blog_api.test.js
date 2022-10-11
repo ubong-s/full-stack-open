@@ -28,6 +28,31 @@ test('id to be defined instead of "_id"', async () => {
    });
 });
 
+test('verifies that making an HTTP post successfully ceates a new blog + checks new length', async () => {
+   const newBlog = {
+      title: 'Jest Testing through RTL',
+      author: 'Matt IIves',
+      url: 'https://fullstackopen.com/',
+      likes: 20,
+   };
+
+   const blogsAtStart = await helper.blogsInDb();
+
+   await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+   const blogsAtEnd = await helper.blogsInDb();
+
+   expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1);
+
+   const titles = blogsAtEnd.map((blog) => blog.title);
+
+   expect(titles).toContain('Jest Testing through RTL');
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
