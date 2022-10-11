@@ -131,6 +131,29 @@ test('updating a blog', async () => {
    });
 });
 
+test('updating amount of likes on a blog', async () => {
+   const blogsAtStart = await helper.blogsInDb();
+
+   const blogToUpdate = blogsAtStart[0];
+
+   const blogObject = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 1,
+   };
+
+   await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogObject)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+   const blogsAtEnd = await helper.blogsInDb();
+   const updatedBlog = blogsAtEnd[0];
+
+   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+   expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1);
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
