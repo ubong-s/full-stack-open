@@ -53,6 +53,27 @@ test('verifies that making an HTTP post successfully ceates a new blog + checks 
    expect(titles).toContain('Jest Testing through RTL');
 });
 
+test('verifies that default likes is 0 when not provided', async () => {
+   const newBlog = {
+      title: 'Jest Testing through RTL',
+      author: 'Matt IIves',
+      url: 'https://fullstackopen.com/',
+   };
+
+   await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+   const blogsAtEnd = await helper.blogsInDb();
+
+   const blogToView = blogsAtEnd[blogsAtEnd.length - 1];
+
+   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+   expect(blogToView.likes).toBe(0);
+});
+
 afterAll(() => {
    mongoose.connection.close();
 });
