@@ -1,13 +1,14 @@
 const blogRouter = require('express').Router();
 const { query } = require('express');
 const Blog = require('../models/blog');
+const { userExtractor } = require('../utils/middleware');
 
 blogRouter.get('/', async (request, response) => {
    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
    response.json(blogs);
 });
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', userExtractor, async (request, response) => {
    const { body, user } = request;
 
    const blog = new Blog({
@@ -25,13 +26,13 @@ blogRouter.post('/', async (request, response) => {
    response.status(201).json(savedBlog);
 });
 
-blogRouter.delete('/:id', async (request, response) => {
+blogRouter.delete('/:id', userExtractor, async (request, response) => {
    const { id } = request.params;
    const user = request.user;
 
    const blog = await Blog.findById(id);
 
-   if (!blog) {
+   if (!blog.user) {
       return response.status(400).json({ error: 'blog does not exist' });
    }
 
