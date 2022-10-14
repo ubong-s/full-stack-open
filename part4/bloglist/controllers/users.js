@@ -5,6 +5,24 @@ const usersRouter = require('express').Router();
 usersRouter.post('/', async (request, response) => {
    const { name, username, password } = request.body;
 
+   if (!username || username.length < 3) {
+      return response
+         .status(400)
+         .json({ error: 'please provide username with 3 or more chars' });
+   }
+
+   if (!password || password.length < 3) {
+      return response
+         .status(400)
+         .json({ error: 'please provide password with 3 or more chars' });
+   }
+
+   const doesUserExist = await User.findOne({ username });
+
+   if (doesUserExist) {
+      return response.status(400).json({ error: 'username taken' });
+   }
+
    const saltRounds = 10;
    const passwordHash = await bcrypt.hash(password, saltRounds);
 
