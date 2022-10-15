@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -10,6 +11,7 @@ const App = () => {
       username: '',
       password: '',
    });
+   const [errorMessage, setErrorMessage] = useState(null);
 
    const [user, setUser] = useState(null);
 
@@ -27,7 +29,12 @@ const App = () => {
             username: '',
             password: '',
          });
-      } catch (error) {}
+      } catch (error) {
+         setErrorMessage('Wrong credentials');
+         setTimeout(() => {
+            setErrorMessage(null);
+         }, 5000);
+      }
    };
 
    const handleLoginChange = (event) => {
@@ -42,6 +49,7 @@ const App = () => {
 
    return (
       <>
+         <Notification message={errorMessage} />
          {!user && (
             <LoginForm
                username={loginDetails.username}
