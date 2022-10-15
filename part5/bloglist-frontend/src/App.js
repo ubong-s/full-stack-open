@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import BlogList from './components/BlogList';
+import CreateBlogForm from './components/CreateBlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
@@ -11,12 +12,33 @@ const App = () => {
       username: '',
       password: '',
    });
-   const [errorMessage, setErrorMessage] = useState(null);
-
+   const [errorMessage, setErrorMessage] = useState({ type: '', text: '' });
    const [user, setUser] = useState(null);
+   const [newBlog, setNewBlog] = useState({
+      title: '',
+      author: '',
+      url: '',
+   });
+   const [blogMessage, setBlogMessage] = useState({ type: '', text: '' });
 
    useEffect(() => {
-      blogService.getAll().then((blogs) => setBlogs(blogs));
+      async function fetchData() {
+         try {
+            const blogs = await blogService.getAll();
+            setBlogs(blogs);
+         } catch (error) {
+            setBlogMessage({
+               type: 'error',
+               text: 'error fetching blogs',
+            });
+
+            setTimeout(() => {
+               setBlogMessage({ type: '', text: '' });
+            }, 5000);
+         }
+      }
+
+      fetchData();
    }, []);
 
    useEffect(() => {
@@ -28,6 +50,44 @@ const App = () => {
          blogService.setToken(user.token);
       }
    }, []);
+
+   useEffect(() => {
+      if (
+         blogMessage?.text === 'token expired' ||
+         errorMessage?.text === 'token expired'
+      ) {
+         handleLogout();
+      }
+   }, [errorMessage.text, blogMessage.text]);
+
+   const createBlog = async (event) => {
+      event.preventDefault();
+      try {
+         const blog = await blogService.create(newBlog);
+         setBlogs(blogs.concat(blog));
+
+         setNewBlog({
+            title: '',
+            author: '',
+            url: '',
+         });
+         setBlogMessage({
+            type: 'success',
+            text: `a new blog ${blog.title} by ${blog.author} added`,
+         });
+
+         setTimeout(() => {
+            setBlogMessage({ type: '', text: '' });
+         }, 5000);
+      } catch (error) {
+         console.log(error);
+         setBlogMessage({ type: 'error', text: error.response.data.error });
+
+         setTimeout(() => {
+            setBlogMessage({ type: '', text: '' });
+         }, 5000);
+      }
+   };
 
    const handleLogin = async (event) => {
       event.preventDefault();
@@ -43,9 +103,9 @@ const App = () => {
             password: '',
          });
       } catch (error) {
-         setErrorMessage('Wrong credentials');
+         setErrorMessage({ type: 'error', text: 'Wrong username or password' });
          setTimeout(() => {
-            setErrorMessage(null);
+            setErrorMessage({ type: '', text: '' });
          }, 5000);
       }
    };
@@ -66,20 +126,46 @@ const App = () => {
       blogService.setToken(null);
    };
 
+   const handleBlogChange = (event) => {
+      const name = event.target.name;
+      const value = event.target.value;
+
+      setNewBlog({
+         ...newBlog,
+         [name]: value,
+      });
+   };
+
    return (
       <>
-         <Notification message={errorMessage} />
          {!user && (
-            <LoginForm
-               username={loginDetails.username}
-               password={loginDetails.password}
-               handleLoginChange={handleLoginChange}
-               handleLogin={handleLogin}
-            />
+            <>
+               <h2>log in to application</h2>
+               <Notification message={errorMessage} />
+               <LoginForm
+                  username={loginDetails.username}
+                  password={loginDetails.password}
+                  handleLoginChange={handleLoginChange}
+                  handleLogin={handleLogin}
+               />
+            </>
          )}
 
          {user && (
-            <BlogList blogs={blogs} user={user} handleLogout={handleLogout} />
+            <>
+               <h2>blogs</h2>
+               <Notification message={blogMessage} />
+               <p>
+                  {user.name || user.username} logged in{' '}
+                  <button onClick={handleLogout}>logout</button>
+               </p>
+               <CreateBlogForm
+                  blog={newBlog}
+                  createBlog={createBlog}
+                  handleBlogChange={handleBlogChange}
+               />
+               <BlogList blogs={blogs} handleLogout={handleLogout} />
+            </>
          )}
       </>
    );
