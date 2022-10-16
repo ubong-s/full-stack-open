@@ -1,19 +1,47 @@
 import { useState } from 'react';
 
-const CreateBlogForm = ({ handleBlogChange, blog, createBlog }) => {
+const CreateBlogForm = ({ createBlog }) => {
+   const [newBlog, setNewBlog] = useState({
+      title: '',
+      author: '',
+      url: '',
+   });
+
+   const handleChange = (event) => {
+      const name = event.target.name;
+      const value = event.target.value;
+
+      setNewBlog({
+         ...newBlog,
+         [name]: value,
+      });
+   };
+
+   const addBlog = (event) => {
+      event.preventDefault();
+
+      createBlog(newBlog);
+
+      setNewBlog({
+         title: '',
+         author: '',
+         url: '',
+      });
+   };
+
    return (
       <div>
          <h2>Create new</h2>
 
-         <form onSubmit={createBlog}>
+         <form onSubmit={addBlog}>
             <div>
                <label htmlFor='title'>title:</label>
                <input
                   type='text'
                   name='title'
                   id='title'
-                  value={blog.title}
-                  onChange={handleBlogChange}
+                  value={newBlog.title}
+                  onChange={handleChange}
                />
             </div>
             <div>
@@ -22,8 +50,8 @@ const CreateBlogForm = ({ handleBlogChange, blog, createBlog }) => {
                   type='text'
                   name='author'
                   id='author'
-                  value={blog.author}
-                  onChange={handleBlogChange}
+                  value={newBlog.author}
+                  onChange={handleChange}
                />
             </div>
             <div>
@@ -32,8 +60,8 @@ const CreateBlogForm = ({ handleBlogChange, blog, createBlog }) => {
                   type='text'
                   name='url'
                   id='url'
-                  value={blog.url}
-                  onChange={handleBlogChange}
+                  value={newBlog.url}
+                  onChange={handleChange}
                />
             </div>
 

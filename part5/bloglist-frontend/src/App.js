@@ -9,18 +9,10 @@ import loginService from './services/login';
 
 const App = () => {
    const [blogs, setBlogs] = useState([]);
-   const [loginDetails, setloginDetails] = useState({
-      username: '',
-      password: '',
-   });
    const [errorMessage, setErrorMessage] = useState({ type: '', text: '' });
    const [user, setUser] = useState(null);
-   const [newBlog, setNewBlog] = useState({
-      title: '',
-      author: '',
-      url: '',
-   });
    const [blogMessage, setBlogMessage] = useState({ type: '', text: '' });
+
    const blogFormRef = useRef();
 
    useEffect(() => {
@@ -62,18 +54,12 @@ const App = () => {
       }
    }, [errorMessage.text, blogMessage.text]);
 
-   const createBlog = async (event) => {
-      event.preventDefault();
+   const createBlog = async (newBlog) => {
       try {
          const blog = await blogService.create(newBlog);
          setBlogs(blogs.concat(blog));
          blogFormRef.current.toggleVisibility();
 
-         setNewBlog({
-            title: '',
-            author: '',
-            url: '',
-         });
          setBlogMessage({
             type: 'success',
             text: `a new blog ${blog.title} by ${blog.author} added`,
@@ -92,19 +78,12 @@ const App = () => {
       }
    };
 
-   const handleLogin = async (event) => {
-      event.preventDefault();
-
+   const loginUser = async (loginDetails) => {
       try {
          const user = await loginService.login(loginDetails);
-
          window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
          blogService.setToken(user.token);
          setUser(user);
-         setloginDetails({
-            username: '',
-            password: '',
-         });
       } catch (error) {
          setErrorMessage({ type: 'error', text: 'Wrong username or password' });
          setTimeout(() => {
@@ -113,30 +92,10 @@ const App = () => {
       }
    };
 
-   const handleLoginChange = (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-
-      setloginDetails({
-         ...loginDetails,
-         [name]: value,
-      });
-   };
-
    const handleLogout = () => {
       window.localStorage.removeItem('loggedBlogAppUser');
       setUser(null);
       blogService.setToken(null);
-   };
-
-   const handleBlogChange = (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-
-      setNewBlog({
-         ...newBlog,
-         [name]: value,
-      });
    };
 
    return (
@@ -145,13 +104,7 @@ const App = () => {
             <>
                <h2>log in to application</h2>
                <Notification message={errorMessage} />
-
-               <LoginForm
-                  username={loginDetails.username}
-                  password={loginDetails.password}
-                  handleLoginChange={handleLoginChange}
-                  handleLogin={handleLogin}
-               />
+               <LoginForm loginUser={loginUser} />
             </>
          )}
 
@@ -164,13 +117,8 @@ const App = () => {
                   <button onClick={handleLogout}>logout</button>
                </p>
                <Togglable buttonLabel='new note' ref={blogFormRef}>
-                  <CreateBlogForm
-                     blog={newBlog}
-                     createBlog={createBlog}
-                     handleBlogChange={handleBlogChange}
-                  />
+                  <CreateBlogForm createBlog={createBlog} />
                </Togglable>
-
                <BlogList blogs={blogs} handleLogout={handleLogout} />
             </>
          )}
