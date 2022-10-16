@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import BlogList from './components/BlogList';
 import CreateBlogForm from './components/CreateBlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -20,6 +21,7 @@ const App = () => {
       url: '',
    });
    const [blogMessage, setBlogMessage] = useState({ type: '', text: '' });
+   const blogFormRef = useRef();
 
    useEffect(() => {
       async function fetchData() {
@@ -65,6 +67,7 @@ const App = () => {
       try {
          const blog = await blogService.create(newBlog);
          setBlogs(blogs.concat(blog));
+         blogFormRef.current.toggleVisibility();
 
          setNewBlog({
             title: '',
@@ -142,6 +145,7 @@ const App = () => {
             <>
                <h2>log in to application</h2>
                <Notification message={errorMessage} />
+
                <LoginForm
                   username={loginDetails.username}
                   password={loginDetails.password}
@@ -156,14 +160,17 @@ const App = () => {
                <h2>blogs</h2>
                <Notification message={blogMessage} />
                <p>
-                  {user.name || user.username} logged in{' '}
+                  {user.name || user.username} logged in
                   <button onClick={handleLogout}>logout</button>
                </p>
-               <CreateBlogForm
-                  blog={newBlog}
-                  createBlog={createBlog}
-                  handleBlogChange={handleBlogChange}
-               />
+               <Togglable buttonLabel='new note' ref={blogFormRef}>
+                  <CreateBlogForm
+                     blog={newBlog}
+                     createBlog={createBlog}
+                     handleBlogChange={handleBlogChange}
+                  />
+               </Togglable>
+
                <BlogList blogs={blogs} handleLogout={handleLogout} />
             </>
          )}
