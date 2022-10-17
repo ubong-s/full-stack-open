@@ -98,6 +98,25 @@ const App = () => {
       blogService.setToken(null);
    };
 
+   const updateLikes = async (id, updatedBlogPost) => {
+      try {
+         blogService.updateBlog(id, updatedBlogPost);
+         setBlogs((prev) =>
+            prev.map((blog) => {
+               return blog.id === updatedBlogPost.id ? updatedBlogPost : blog;
+            })
+         );
+      } catch (error) {
+         setBlogMessage({
+            type: 'error',
+            text: `error updating ${updatedBlogPost.title}`,
+         });
+         setTimeout(() => {
+            setBlogMessage({ type: '', text: '' });
+         }, 5000);
+      }
+   };
+
    return (
       <>
          {!user && (
@@ -119,7 +138,11 @@ const App = () => {
                <Togglable buttonLabel='new note' ref={blogFormRef}>
                   <CreateBlogForm createBlog={createBlog} />
                </Togglable>
-               <BlogList blogs={blogs} handleLogout={handleLogout} />
+               <BlogList
+                  blogs={blogs}
+                  handleLogout={handleLogout}
+                  updateLikes={updateLikes}
+               />
             </>
          )}
       </>

@@ -45,10 +45,11 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
    response.status(204).end();
 });
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', userExtractor, async (request, response) => {
    const {
       body,
       params: { id },
+      user,
    } = request;
 
    const blog = {
@@ -56,6 +57,7 @@ blogRouter.put('/:id', async (request, response) => {
       author: body.author,
       url: body.url,
       likes: body.likes,
+      user: body.user,
    };
 
    const updatedBlog = await Blog.findByIdAndUpdate(id, blog, {
@@ -63,6 +65,13 @@ blogRouter.put('/:id', async (request, response) => {
       runValidators: true,
       context: query,
    });
+
+   if (!updatedBlog) {
+      response.status(400).end();
+   }
+
+   user.likes = user.likes.concat(updatedBlog._id);
+   await user.save();
 
    response.json(updatedBlog);
 });

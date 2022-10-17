@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
    },
    name: String,
    passwordHash: String,
+   likes: [
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'Blog',
+      },
+   ],
 });
 
 userSchema.set('toJSON', {
