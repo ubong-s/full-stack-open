@@ -100,7 +100,7 @@ const App = () => {
 
    const updateLikes = async (id, updatedBlogPost) => {
       try {
-         blogService.updateBlog(id, updatedBlogPost);
+         blogService.update(id, updatedBlogPost);
          setBlogs((prev) =>
             prev.map((blog) => {
                return blog.id === updatedBlogPost.id ? updatedBlogPost : blog;
@@ -110,6 +110,29 @@ const App = () => {
          setBlogMessage({
             type: 'error',
             text: `error updating ${updatedBlogPost.title}`,
+         });
+         setTimeout(() => {
+            setBlogMessage({ type: '', text: '' });
+         }, 5000);
+      }
+   };
+
+   const deleteBlog = async (blog) => {
+      try {
+         blogService.deleteBlog(blog.id);
+         setBlogs((prev) => prev.filter((b) => b.id !== blog.id));
+         setBlogMessage({
+            type: 'success',
+            text: `${blog.title} deleted`,
+         });
+
+         setTimeout(() => {
+            setBlogMessage({ type: '', text: '' });
+         }, 5000);
+      } catch (error) {
+         setBlogMessage({
+            type: 'error',
+            text: `error deleting ${blog.title}`,
          });
          setTimeout(() => {
             setBlogMessage({ type: '', text: '' });
@@ -142,6 +165,7 @@ const App = () => {
                   blogs={blogs}
                   handleLogout={handleLogout}
                   updateLikes={updateLikes}
+                  deleteBlog={deleteBlog}
                />
             </>
          )}
