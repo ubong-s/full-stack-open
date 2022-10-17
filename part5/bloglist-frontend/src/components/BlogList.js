@@ -1,4 +1,5 @@
 import Blog from './Blog';
+import PropTypes from 'prop-types';
 
 const BlogList = ({ blogs, updateLikes, deleteBlog }) => {
    return (
@@ -15,6 +16,25 @@ const BlogList = ({ blogs, updateLikes, deleteBlog }) => {
             ))}
       </>
    );
+};
+
+BlogList.propTypes = {
+   blogs: PropTypes.arrayOf(
+      PropTypes.shape({
+         author: PropTypes.string.isRequired,
+         id: PropTypes.string.isRequired,
+         likes: PropTypes.number.isRequired,
+         title: PropTypes.string.isRequired,
+         url: PropTypes.string.isRequired,
+         user: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            username: PropTypes.string.isRequired,
+         }),
+      })
+   ),
+   updateLikes: PropTypes.func.isRequired,
+   deleteBlog: PropTypes.func.isRequired,
 };
 
 export default BlogList;
