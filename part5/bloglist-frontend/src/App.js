@@ -47,8 +47,8 @@ const App = () => {
 
    useEffect(() => {
       if (
-         blogMessage?.text === 'token expired' ||
-         errorMessage?.text === 'token expired'
+         blogMessage.text === 'token expired' ||
+         errorMessage.text === 'token expired'
       ) {
          handleLogout();
       }
