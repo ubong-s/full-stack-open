@@ -16,6 +16,7 @@ describe('Blog', () => {
 
    const updateLikesHandler = jest.fn();
    const deleteBlogHandler = jest.fn();
+   const user = userEvent.setup();
 
    beforeEach(() => {
       container = render(
@@ -42,9 +43,8 @@ describe('Blog', () => {
    });
 
    test('blog url and number of likes are shown when the button controlling the shown details has been clicked', async () => {
-      const user = userEvent.setup();
-      const button = screen.getByText('view');
-      await user.click(button);
+      const viewButton = screen.getByText('view');
+      await user.click(viewButton);
 
       const author = screen.getByText(blog.author);
       const title = screen.getByText(blog.title);
@@ -57,5 +57,19 @@ describe('Blog', () => {
       expect(url).toBeInTheDocument();
       expect(likes).toBeInTheDocument();
       expect(toggledSection).toBeInTheDocument();
+   });
+
+   test('if the like button is clicked twice, the event handler the component received as props is called twice', async () => {
+      const viewButton = screen.getByText('view');
+      await user.click(viewButton);
+
+      const likeButton = container.querySelector('.like-btn');
+
+      screen.debug(likeButton);
+
+      await user.click(likeButton);
+      await user.click(likeButton);
+
+      expect(updateLikesHandler.mock.calls).toHaveLength(2);
    });
 });

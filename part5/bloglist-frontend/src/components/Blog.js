@@ -40,7 +40,10 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
             <div className='toggled-section'>
                <div>{blog.url}</div>
                <div className='likes'>
-                  likes {blog.likes} <button onClick={handleLikes}>like</button>
+                  likes {blog.likes}{' '}
+                  <button className='like-btn' onClick={handleLikes}>
+                     like
+                  </button>
                </div>
                <div>{blog.user && (blog.user.name || blog.user.username)}</div>
                <button
