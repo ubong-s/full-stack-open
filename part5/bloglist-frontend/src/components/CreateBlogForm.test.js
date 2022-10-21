@@ -20,8 +20,6 @@ describe('Create Blog Form', () => {
       await user.type(urlInput, 'a-new-form-by-from');
       await user.click(sendButton);
 
-      console.log(createBlog.mock.calls);
-
       expect(createBlog.mock.calls).toHaveLength(1);
       expect(createBlog.mock.calls[0][0].title).toBe(
          'A new form by from Ubong'
