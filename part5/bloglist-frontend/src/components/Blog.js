@@ -31,24 +31,26 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
    return (
       <div style={blogStyle}>
          <div>
-            {blog.title} {blog.author}
+            <span>{blog.title}</span> <span>{blog.author}</span>
             <button onClick={toggleShowDetails}>
                {showDetails ? 'hide' : 'view'}
             </button>
          </div>
-         <div style={{ display: showDetails ? '' : 'none' }}>
-            <div>{blog.url}</div>
-            <div>
-               likes {blog.likes} <button onClick={handleLikes}>like</button>
+         {showDetails && (
+            <div className='toggled-section'>
+               <div>{blog.url}</div>
+               <div className='likes'>
+                  likes {blog.likes} <button onClick={handleLikes}>like</button>
+               </div>
+               <div>{blog.user && (blog.user.name || blog.user.username)}</div>
+               <button
+                  style={{ backgroundColor: 'blue', color: 'white' }}
+                  onClick={handleDelete}
+               >
+                  remove
+               </button>
             </div>
-            <div>{blog.user && (blog.user.name || blog.user.username)}</div>
-            <button
-               style={{ backgroundColor: 'blue', color: 'white' }}
-               onClick={handleDelete}
-            >
-               remove
-            </button>
-         </div>
+         )}
       </div>
    );
 };
