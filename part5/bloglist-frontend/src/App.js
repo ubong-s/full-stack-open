@@ -99,13 +99,18 @@ const App = () => {
    };
 
    const updateLikes = async (id, updatedBlogPost) => {
+      let tempBlogs = [...blogs];
       try {
-         blogService.update(id, updatedBlogPost);
-         setBlogs((prev) =>
-            prev.map((blog) => {
-               return blog.id === updatedBlogPost.id ? updatedBlogPost : blog;
-            })
-         );
+         tempBlogs = tempBlogs.map((blog) => {
+            if (blog.id === updatedBlogPost.id) {
+               console.log(updatedBlogPost);
+               return updatedBlogPost;
+            }
+
+            return blog;
+         });
+         await blogService.update(id, updatedBlogPost);
+         setBlogs(tempBlogs);
       } catch (error) {
          setBlogMessage({
             type: 'error',
@@ -119,7 +124,7 @@ const App = () => {
 
    const deleteBlog = async (blog) => {
       try {
-         blogService.deleteBlog(blog.id);
+         await blogService.deleteBlog(blog.id);
          setBlogs((prev) => prev.filter((b) => b.id !== blog.id));
          setBlogMessage({
             type: 'success',

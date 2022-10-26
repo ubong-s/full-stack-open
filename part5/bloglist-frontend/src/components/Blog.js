@@ -16,8 +16,12 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
 
    const handleLikes = () => {
       const updatedBlogPost = {
-         ...blog,
+         id: blog.id,
+         title: blog.title,
+         author: blog.author,
+         url: blog.url,
          likes: blog.likes + 1,
+         user: blog.user.id,
       };
       updateLikes(blog.id, updatedBlogPost);
    };
@@ -32,7 +36,7 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
       <div style={blogStyle}>
          <div>
             <span>{blog.title}</span> <span>{blog.author}</span>
-            <button onClick={toggleShowDetails}>
+            <button id='toggle-details' onClick={toggleShowDetails}>
                {showDetails ? 'hide' : 'view'}
             </button>
          </div>
@@ -49,6 +53,7 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
                <button
                   style={{ backgroundColor: 'blue', color: 'white' }}
                   onClick={handleDelete}
+                  className='delete-btn'
                >
                   remove
                </button>

@@ -67,7 +67,7 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
    });
 
    if (!updatedBlog) {
-      response.status(400).end();
+      return response.status(400).end();
    }
 
    user.likes = user.likes.concat(updatedBlog._id);
