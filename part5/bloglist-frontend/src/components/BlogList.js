@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const BlogList = ({ blogs, updateLikes, deleteBlog }) => {
    return (
-      <>
+      <div>
          {blogs
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
@@ -14,7 +14,7 @@ const BlogList = ({ blogs, updateLikes, deleteBlog }) => {
                   deleteBlog={deleteBlog}
                />
             ))}
-      </>
+      </div>
    );
 };
 

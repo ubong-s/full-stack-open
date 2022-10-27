@@ -80,7 +80,7 @@ describe('Blog app', () => {
          cy.contains('Matty');
       });
 
-      describe('first', () => {
+      describe('CRUD functions on app', () => {
          beforeEach(function () {
             cy.createBlog({
                title: 'Blog Post One',
@@ -105,9 +105,10 @@ describe('Blog app', () => {
 
             cy.contains('Blog Post One')
                .parent()
-               .find('#toggle-details')
+               .find('.toggle-details')
                .as('viewHideButton')
-               .click();
+               .click()
+               .wait(500);
          });
 
          it('user can like a blog', function () {
@@ -115,7 +116,6 @@ describe('Blog app', () => {
                .parent()
                .parent()
                .find('.like-btn')
-
                .click();
          });
 
@@ -132,12 +132,12 @@ describe('Blog app', () => {
                .and('have.css', 'border-style', 'solid');
          });
 
-         it.only('user cant delete a blog if he didnt create it', function () {
+         it('user cant delete a blog if he didnt create it', function () {
             cy.login({ username: 'ubongy', password: 'secrets' });
 
             cy.contains('Blog Post One')
                .parent()
-               .find('#toggle-details')
+               .find('.toggle-details')
                .as('viewHideButton')
                .click();
 
@@ -154,6 +154,58 @@ describe('Blog app', () => {
 
             cy.get('body').should('contain', 'Blog Post One');
          });
+
+         it.only(
+            'blogs are ordered according to likes with the blog with the most likes being first',
+            { defaultCommandTimeout: 10000 },
+            function () {
+               cy.contains('Blog Post One')
+                  .parent()
+                  .parent()
+                  .find('.like-btn')
+                  .click()
+                  .wait(500)
+                  .click()
+                  .wait(500);
+
+               cy.contains('Blog Post Two')
+                  .parent()
+                  .find('.toggle-details')
+                  .click();
+               cy.contains('Blog Post Two')
+                  .parent()
+                  .parent()
+                  .find('.like-btn')
+                  .click()
+                  .wait(500)
+                  .click()
+                  .wait(500)
+                  .click()
+                  .wait(500);
+
+               cy.contains('Blog Post Four')
+                  .parent()
+                  .find('.toggle-details')
+                  .click();
+               cy.contains('Blog Post Four')
+                  .parent()
+                  .parent()
+                  .find('.like-btn')
+                  .click()
+                  .wait(500)
+                  .click()
+                  .wait(500)
+                  .click()
+                  .wait(500)
+                  .click()
+                  .wait(500);
+
+               cy.get('.blog').eq(0).should('contain', 'Blog Post Four');
+               cy.get('.blog').eq(1).should('contain', 'Blog Post Two');
+               cy.get('.blog').eq(2).should('contain', 'Blog Post One');
+               cy.get('.blog').eq(3).should('contain', 'Blog Post Three');
+            }
+         );
       });
    });
 });

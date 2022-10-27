@@ -33,10 +33,10 @@ const Blog = ({ blog, updateLikes, deleteBlog }) => {
    };
 
    return (
-      <div style={blogStyle}>
+      <div style={blogStyle} className='blog'>
          <div>
             <span>{blog.title}</span> <span>{blog.author}</span>
-            <button id='toggle-details' onClick={toggleShowDetails}>
+            <button className='toggle-details' onClick={toggleShowDetails}>
                {showDetails ? 'hide' : 'view'}
             </button>
          </div>
