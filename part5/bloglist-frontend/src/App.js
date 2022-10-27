@@ -103,8 +103,10 @@ const App = () => {
       try {
          tempBlogs = tempBlogs.map((blog) => {
             if (blog.id === updatedBlogPost.id) {
-               console.log(updatedBlogPost);
-               return updatedBlogPost;
+               return {
+                  ...blog,
+                  likes: updatedBlogPost.likes,
+               };
             }
 
             return blog;

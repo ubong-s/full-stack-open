@@ -10,6 +10,14 @@ describe('Blog app', () => {
 
       cy.request('POST', 'http://localhost:3003/api/users/', user);
 
+      const user2 = {
+         name: 'Ubongy',
+         username: 'ubongy',
+         password: 'secrets',
+      };
+
+      cy.request('POST', 'http://localhost:3003/api/users/', user2);
+
       cy.visit('http://localhost:3000');
    });
 
@@ -111,7 +119,7 @@ describe('Blog app', () => {
                .click();
          });
 
-         it.only('user can delete a blog', function () {
+         it('user can delete a blog', function () {
             cy.contains('Blog Post One')
                .parent()
                .parent()
@@ -122,6 +130,29 @@ describe('Blog app', () => {
                .should('have.text', 'Blog Post One deleted')
                .and('have.css', 'color', 'rgb(0, 128, 0)')
                .and('have.css', 'border-style', 'solid');
+         });
+
+         it.only('user cant delete a blog if he didnt create it', function () {
+            cy.login({ username: 'ubongy', password: 'secrets' });
+
+            cy.contains('Blog Post One')
+               .parent()
+               .find('#toggle-details')
+               .as('viewHideButton')
+               .click();
+
+            cy.contains('Blog Post One')
+               .parent()
+               .parent()
+               .find('.delete-btn')
+               .click();
+
+            cy.get('.error')
+               .should('have.text', 'error deleting Blog Post One')
+               .and('have.css', 'color', 'rgb(255, 0, 0)')
+               .and('have.css', 'border-style', 'solid');
+
+            cy.get('body').should('contain', 'Blog Post One');
          });
       });
    });
