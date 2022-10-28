@@ -5,10 +5,6 @@ const App = () => {
    const anecdotes = useSelector((state) => state);
    const dispatch = useDispatch();
 
-   const vote = (id) => {
-      dispatch(voteAnecdote(id));
-   };
-
    const addAnecdote = (event) => {
       event.preventDefault();
       const content = event.target.anecdote.value;
@@ -26,7 +22,11 @@ const App = () => {
                   <div>{anecdote.content}</div>
                   <div>
                      has {anecdote.votes}
-                     <button onClick={() => vote(anecdote.id)}>vote</button>
+                     <button
+                        onClick={() => dispatch(voteAnecdote(anecdote.id))}
+                     >
+                        vote
+                     </button>
                   </div>
                </div>
             ))}
