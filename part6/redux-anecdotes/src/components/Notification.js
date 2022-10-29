@@ -21,7 +21,7 @@ const Notification = () => {
             dispatch(removeMessage());
          }, 5000);
       }
-   }, [notification]);
+   }, [notification]); // eslint-disable-line react-hooks/exhaustive-deps
 
    if (!notification) return;
 
