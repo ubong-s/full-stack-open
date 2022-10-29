@@ -14,8 +14,6 @@ const AnecdoteList = () => {
    });
    const dispatch = useDispatch();
 
-   console.log(anecdotes);
-
    return (
       <div>
          {[...anecdotes]
