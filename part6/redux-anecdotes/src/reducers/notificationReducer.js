@@ -21,7 +21,7 @@ export const newNotification = (message, time) => {
    return async (dispatch) => {
       dispatch(setNotification(message));
 
-      clearTimeout(timeout);
+      timeout && clearTimeout(timeout);
 
       timeout = setTimeout(() => {
          dispatch(clearNotification());
