@@ -1,11 +1,9 @@
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useRef } from 'react';
 import BlogList from '../components/BlogList';
 import CreateBlogForm from '../components/CreateBlogForm';
 import Togglable from '../components/Togglable';
 
 const Blogs = () => {
-   const dispatch = useDispatch();
    const blogFormRef = useRef();
 
    return (

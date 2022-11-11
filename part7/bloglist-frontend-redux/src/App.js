@@ -1,20 +1,16 @@
 import { useEffect } from 'react';
-import {
-   BrowserRouter as Router,
-   Routes,
-   Route,
-   useNavigate,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import Navbar from './components/Navbar';
 import { setUser } from './reducers/userReducer';
+import { initializeBlogsAsync } from './reducers/blogsReducer';
 import blogService from './services/blogs';
 import Blogs from './pages/Blogs';
 import Users from './pages/Users';
 import SingleUser from './pages/SingleUser';
 import SingleBlog from './pages/SingleBlog';
-import { initializeBlogsAsync } from './reducers/blogsReducer';
 
 const App = () => {
    const dispatch = useDispatch();
@@ -36,12 +32,6 @@ const App = () => {
       }
    }, []);
 
-   const handleLogout = () => {
-      dispatch(setUser(null));
-      window.localStorage.removeItem('loggedBlogAppUser');
-      blogService.setToken(null);
-   };
-
    return (
       <>
          <Router>
@@ -55,12 +45,9 @@ const App = () => {
 
             {user && (
                <>
+                  <Navbar />
                   <h2>blogs</h2>
                   <Notification />
-                  <div>
-                     <p>{user.name || user.username} logged in</p>
-                     <button onClick={handleLogout}>logout</button>
-                  </div>
 
                   <Routes>
                      <Route path='/blogs/:id' element={<SingleBlog />} />

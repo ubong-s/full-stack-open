@@ -5,9 +5,9 @@ import { getAllUsersAsync } from '../reducers/userReducer';
 
 const Users = () => {
    const dispatch = useDispatch();
-   const {
-      user: { allUsers },
-   } = useSelector((state) => state);
+   const users = useSelector(({ user: { allUsers } }) => {
+      return [...allUsers].sort((a, b) => b.blogs.length - a.blogs.length);
+   });
 
    useEffect(() => {
       dispatch(getAllUsersAsync());
@@ -26,8 +26,8 @@ const Users = () => {
                </thead>
 
                <tbody>
-                  {allUsers.length > 0 &&
-                     allUsers.map((user) => <User key={user.id} user={user} />)}
+                  {users.length > 0 &&
+                     users.map((user) => <User key={user.id} user={user} />)}
                </tbody>
             </table>
          </div>
