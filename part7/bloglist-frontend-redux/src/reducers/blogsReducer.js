@@ -29,6 +29,18 @@ export const blogsSlice = createSlice({
       deleteBlog: (state, action) => {
          return state.filter((blog) => blog.id !== action.payload);
       },
+
+      addComment: (state, action) => {
+         let updatedBlog = action.payload;
+
+         return state.map((blog) => {
+            if (blog.id === updatedBlog.id) {
+               return updatedBlog;
+            } else {
+               return blog;
+            }
+         });
+      },
    },
 });
 
@@ -124,8 +136,36 @@ export const deleteBlogAsync = (payload) => {
    };
 };
 
+export const addCommentAsync = (payload) => {
+   return async (dispatch) => {
+      try {
+         const { blog, msg } = await blogService.addCommentToBlog(payload);
+         dispatch(addComment(blog));
+         dispatch(
+            newNotification(
+               {
+                  type: 'success',
+                  text: msg,
+               },
+               5
+            )
+         );
+      } catch (error) {
+         dispatch(
+            newNotification(
+               {
+                  type: 'error',
+                  text: error.response.data.msg,
+               },
+               5
+            )
+         );
+      }
+   };
+};
+
 // Action creators are generated for each case reducer function
-export const { setBlogs, createBlog, updateBlog, deleteBlog } =
+export const { setBlogs, createBlog, updateBlog, deleteBlog, addComment } =
    blogsSlice.actions;
 
 export default blogsSlice.reducer;

@@ -1,6 +1,7 @@
 import { useMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBlogAsync, updateBlogAsync } from '../reducers/blogsReducer';
+import Comments from '../components/Comments';
 
 const SingleBlog = () => {
    const dispatch = useDispatch();
@@ -52,13 +53,7 @@ const SingleBlog = () => {
             remove
          </button>
 
-         <h3>Comments</h3>
-
-         <ul>
-            {blog.comments.map((comment) => (
-               <li key={comment._id}>{comment.text}</li>
-            ))}
-         </ul>
+         <Comments id={blog.id} comments={blog.comments} />
       </div>
    );
 };
