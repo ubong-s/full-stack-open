@@ -3,15 +3,10 @@ import { useDispatch } from 'react-redux';
 import BlogList from '../components/BlogList';
 import CreateBlogForm from '../components/CreateBlogForm';
 import Togglable from '../components/Togglable';
-import { initializeBlogsAsync } from '../reducers/blogsReducer';
 
 const Blogs = () => {
    const dispatch = useDispatch();
    const blogFormRef = useRef();
-
-   useEffect(() => {
-      dispatch(initializeBlogsAsync());
-   }, [dispatch]);
 
    return (
       <div>

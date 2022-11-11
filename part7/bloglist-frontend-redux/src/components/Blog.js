@@ -1,12 +1,8 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateBlogAsync, deleteBlogAsync } from '../reducers/blogsReducer';
+
+import { Link } from 'react-router-dom';
 
 const Blog = ({ blog }) => {
-   const dispatch = useDispatch();
-   const [showDetails, setShowDetails] = useState(false);
-
    const blogStyle = {
       paddingTop: 10,
       paddingLeft: 2,
@@ -15,51 +11,11 @@ const Blog = ({ blog }) => {
       marginBottom: 5,
    };
 
-   const toggleShowDetails = () => setShowDetails(!showDetails);
-
-   const handleLikes = () => {
-      const updatedBlogPost = {
-         ...blog,
-         likes: blog.likes + 1,
-      };
-
-      const payload = { id: blog.id, updatedBlogPost };
-      dispatch(updateBlogAsync(payload));
-   };
-
-   const handleDelete = () => {
-      if (window.confirm(`Remove blog ${blog.title}`)) {
-         dispatch(deleteBlogAsync(blog.id));
-      }
-   };
-
    return (
       <div style={blogStyle} className='blog'>
-         <div>
+         <Link to={`/blogs/${blog.id}`}>
             <span>{blog.title}</span> <span>{blog.author}</span>
-            <button className='toggle-details' onClick={toggleShowDetails}>
-               {showDetails ? 'hide' : 'view'}
-            </button>
-         </div>
-         {showDetails && (
-            <div className='toggled-section'>
-               <div>{blog.url}</div>
-               <div className='likes'>
-                  likes {blog.likes}{' '}
-                  <button className='like-btn' onClick={handleLikes}>
-                     like
-                  </button>
-               </div>
-               <div>{blog.user && (blog.user.name || blog.user.username)}</div>
-               <button
-                  style={{ backgroundColor: 'blue', color: 'white' }}
-                  onClick={handleDelete}
-                  className='delete-btn'
-               >
-                  remove
-               </button>
-            </div>
-         )}
+         </Link>
       </div>
    );
 };
