@@ -9,8 +9,6 @@ const Users = () => {
       user: { allUsers },
    } = useSelector((state) => state);
 
-   console.log(allUsers);
-
    useEffect(() => {
       dispatch(getAllUsersAsync());
    }, [dispatch]);

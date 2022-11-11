@@ -8,6 +8,7 @@ import { setUser } from './reducers/userReducer';
 import blogService from './services/blogs';
 import Blogs from './pages/Blogs';
 import Users from './pages/Users';
+import SingleUser from './pages/SingleUser';
 
 const App = () => {
    const dispatch = useDispatch();
@@ -51,8 +52,9 @@ const App = () => {
                </div>
 
                <Routes>
-                  <Route path='/blogs' element={<Blogs />} />
+                  <Route path='/users/:id' element={<SingleUser />} />
                   <Route path='/users' element={<Users />} />
+                  <Route path='/blogs' element={<Blogs />} />
                </Routes>
             </Router>
          )}
