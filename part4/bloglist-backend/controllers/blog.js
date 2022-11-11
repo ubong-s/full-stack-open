@@ -86,4 +86,16 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
    response.json(updatedBlog);
 });
 
+blogRouter.post('/:id/comments', async (request, response) => {
+   const { text } = request.body;
+   const { id } = request.params;
+
+   let blog = await Blog.findById(id);
+   blog.comments = [...blog.comments, { text }];
+
+   await blog.save();
+
+   response.json({ msg: 'your comment has been added' });
+});
+
 module.exports = blogRouter;
