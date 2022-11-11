@@ -16,6 +16,7 @@ const App = () => {
    const dispatch = useDispatch();
    const {
       user: { currentUser: user },
+      notification,
    } = useSelector((state) => state);
 
    useEffect(() => {
@@ -31,6 +32,14 @@ const App = () => {
          blogService.setToken(user.token);
       }
    }, []);
+
+   useEffect(() => {
+      if (notification.text === 'Request failed with status code 401') {
+         dispatch(setUser(null));
+         blogService.setToken(null);
+         window.localStorage.removeItem('loggedBlogAppUser');
+      }
+   }, [notification.text]);
 
    return (
       <>

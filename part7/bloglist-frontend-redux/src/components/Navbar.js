@@ -4,14 +4,6 @@ import { setUser } from '../reducers/userReducer';
 import blogService from '../services/blogs';
 
 const Navbar = () => {
-   const navStyles = {
-      display: 'flex',
-      alignItem: 'center',
-      gap: '0.25rem',
-      backgroundColor: '#D3D3D3',
-      padding: '0.25rem',
-   };
-
    const dispatch = useDispatch();
    const {
       user: { currentUser: user },
@@ -24,12 +16,12 @@ const Navbar = () => {
    };
 
    return (
-      <span style={navStyles}>
+      <nav className='navbar'>
          <Link to='/users'>users</Link>
          <Link to='/'>blogs</Link>
          <span>{user.name || user.username} logged in</span>
          <button onClick={handleLogout}>logout</button>
-      </span>
+      </nav>
    );
 };
 

@@ -45,11 +45,7 @@ const SingleBlog = () => {
          </div>
          <span>added by {blog.user.name}</span>
 
-         <button
-            style={{ backgroundColor: 'blue', color: 'white' }}
-            onClick={handleDelete}
-            className='delete-btn'
-         >
+         <button onClick={handleDelete} className='delete'>
             remove
          </button>
 

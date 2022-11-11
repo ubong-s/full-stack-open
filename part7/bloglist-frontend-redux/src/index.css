@@ -1,9 +1,87 @@
+*,
+::after,
+::before {
+   font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+   line-height: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+   text-transform: capitalize;
+}
+
+button {
+   background-color: blue;
+   outline: none;
+   border: none;
+   color: white;
+   text-transform: capitalize;
+   padding: 0.35rem;
+   border-radius: 3px;
+   cursor: pointer;
+   transition: opacity 0.3s linear;
+}
+
+button:hover {
+   opacity: 0.8;
+}
+
+button.cancel,
+button.delete {
+   background-color: red;
+}
+
+div {
+   margin: 1rem 0;
+}
+
+a {
+   color: blue;
+   transition: color 0.3s linear;
+}
+
+a:hover {
+   color: red;
+}
+
+input {
+   border: blue 1px solid;
+   outline: transparent;
+   transition: border 0.3s linear;
+}
+
+input:hover,
+input:focus,
+input:active {
+   border: red 1px solid;
+}
+
+.navbar {
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   background-color: #d3d3d3;
+   padding: 0.25rem;
+}
+
+.navbar a {
+   text-transform: capitalize;
+}
+
 .error,
 .success {
    background: lightgrey;
-   font-size: 20px;
+   border-width: 1px;
+   font-size: 16px;
    border-style: solid;
-   border-radius: 5px;
+   border-radius: 3px;
    padding: 10px;
    margin-bottom: 10px;
 }
@@ -13,4 +91,11 @@
 
 .success {
    color: green;
+}
+
+.blog {
+   padding: 0.5rem;
+   border-radius: 3px;
+   border: solid;
+   border-width: 1px;
 }
