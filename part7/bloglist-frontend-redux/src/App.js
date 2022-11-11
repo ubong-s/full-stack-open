@@ -1,29 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import BlogList from './components/BlogList';
-import CreateBlogForm from './components/CreateBlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
-import Togglable from './components/Togglable';
 import { initializeBlogsAsync } from './reducers/blogsReducer';
-import { logoutUser, logoutUserAsync, setUser } from './reducers/userReducer';
+import { setUser } from './reducers/userReducer';
 import blogService from './services/blogs';
-import loginService from './services/login';
+import Blogs from './pages/Blogs';
+import Users from './pages/Users';
 
 const App = () => {
    const dispatch = useDispatch();
-
-   const [errorMessage, setErrorMessage] = useState({ type: '', text: '' });
-
-   const [blogMessage, setBlogMessage] = useState({ type: '', text: '' });
-
-   const { user, notification } = useSelector((state) => state);
-
-   const blogFormRef = useRef();
-
-   useEffect(() => {
-      dispatch(initializeBlogsAsync());
-   }, [dispatch]);
+   const {
+      user: { currentUser: user },
+   } = useSelector((state) => state);
 
    useEffect(() => {
       const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
@@ -52,18 +42,19 @@ const App = () => {
          )}
 
          {user && (
-            <>
+            <Router>
                <h2>blogs</h2>
                <Notification />
-               <p>
-                  {user.name || user.username} logged in
+               <div>
+                  <p>{user.name || user.username} logged in</p>
                   <button onClick={handleLogout}>logout</button>
-               </p>
-               <Togglable buttonLabel='new blog' ref={blogFormRef}>
-                  <CreateBlogForm />
-               </Togglable>
-               <BlogList />
-            </>
+               </div>
+
+               <Routes>
+                  <Route path='/blogs' element={<Blogs />} />
+                  <Route path='/users' element={<Users />} />
+               </Routes>
+            </Router>
          )}
       </>
    );
