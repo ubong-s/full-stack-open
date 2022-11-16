@@ -116,6 +116,7 @@ const typeDefs = gql`
          published: Int!
          genres: [String!]!
       ): Book
+      editAuthor(name: String!, born: Int!): Author
    }
 
    type Query {
@@ -178,7 +179,7 @@ const resolvers = {
          );
 
          if (!authorExists) {
-            const newAuthor = { name: args.author, id: uuid() };
+            const newAuthor = { name: args.author, id: uuid(), bookCount: 1 };
             console.log(authors.concat(newAuthor));
             authors.concat(newAuthor);
          }
@@ -187,6 +188,23 @@ const resolvers = {
          books = books.concat(book);
 
          return book;
+      },
+
+      editAuthor: (root, args) => {
+         const author = authors.find((author) => author.name === args.name);
+         if (!author) {
+            throw new UserInputError('Name cannot be found', {
+               invalidArgs: args.name,
+            });
+         }
+
+         const updatedAuthor = { ...author, born: args.born };
+
+         authors = authors.map((author) => {
+            return author.name === updatedAuthor.name ? updatedAuthor : author;
+         });
+
+         return updatedAuthor;
       },
    },
 };
