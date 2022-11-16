@@ -1,4 +1,5 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer, gql, UserInputError } = require('apollo-server');
+const { v1: uuid } = require('uuid');
 
 let authors = [
    {
@@ -108,6 +109,15 @@ const typeDefs = gql`
       bookCount: Int
    }
 
+   type Mutation {
+      addBook(
+         title: String!
+         author: String!
+         published: Int!
+         genres: [String!]!
+      ): Book
+   }
+
    type Query {
       bookCount: Int!
       authorCount: Int!
@@ -144,9 +154,39 @@ const resolvers = {
          const getBookCount = (author) =>
             books.filter((book) => book.author === author.name).length;
 
-         return authors.map((author) => {
+         authors = authors.map((author) => {
             return { ...author, bookCount: getBookCount(author) };
          });
+
+         return authors;
+      },
+   },
+
+   Mutation: {
+      addBook: (root, args) => {
+         // check if books title exists already
+         const bookExists = books.find((book) => book.title === args.title);
+         if (bookExists) {
+            throw new UserInputError('Title must be unique', {
+               invalidArgs: args.title,
+            });
+         }
+
+         // Check if author already exists
+         const authorExists = authors.find(
+            (author) => author.name === args.author
+         );
+
+         if (!authorExists) {
+            const newAuthor = { name: args.author, id: uuid() };
+            console.log(authors.concat(newAuthor));
+            authors.concat(newAuthor);
+         }
+
+         const book = { ...args, id: uuid() };
+         books = books.concat(book);
+
+         return book;
       },
    },
 };
