@@ -6,10 +6,7 @@ const Authors = (props) => {
    if (!props.show) {
       return null;
    }
-
    const authors = result.data?.allAuthors ? result.data.allAuthors : [];
-
-   console.log(authors);
 
    return (
       <div>
