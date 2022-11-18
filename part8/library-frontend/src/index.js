@@ -4,7 +4,6 @@ import App from './App';
 import {
    ApolloClient,
    ApolloProvider,
-   gql,
    HttpLink,
    InMemoryCache,
 } from '@apollo/client';

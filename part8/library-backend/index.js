@@ -179,9 +179,8 @@ const resolvers = {
          );
 
          if (!authorExists) {
-            const newAuthor = { name: args.author, id: uuid(), bookCount: 1 };
-            console.log(authors.concat(newAuthor));
-            authors.concat(newAuthor);
+            const newAuthor = { name: args.author, id: uuid() };
+            authors = authors.concat(newAuthor);
          }
 
          const book = { ...args, id: uuid() };
