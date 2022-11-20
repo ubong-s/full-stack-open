@@ -79,7 +79,25 @@ const resolvers = {
       },
 
       allAuthors: async () => {
-         return Author.find({});
+         const books = await Book.find({}).populate('author');
+         let authors = await Author.find({});
+
+         const getBookCount = (author) =>
+            [...books].filter((book) => book.author.name === author.name)
+               .length;
+
+         if (books && authors) {
+            const updateAuthors = [...authors].map((author) => {
+               return {
+                  id: author._id,
+                  name: author.name,
+                  born: author.born,
+                  bookCount: getBookCount(author),
+               };
+            });
+
+            return updateAuthors;
+         }
       },
    },
 
