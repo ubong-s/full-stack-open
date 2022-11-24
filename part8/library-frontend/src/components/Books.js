@@ -1,16 +1,19 @@
 import { useQuery } from '@apollo/client';
-import { useState } from 'react';
-import { ALL_BOOKS } from '../queries';
+import { useEffect, useState } from 'react';
+import { ALL_BOOKS_GENRE } from '../queries';
 
 const Books = (props) => {
-   const result = useQuery(ALL_BOOKS);
    const [genre, setGenre] = useState('');
-
-   if (!props.show) {
-      return null;
-   }
+   const result = useQuery(ALL_BOOKS_GENRE, {
+      variables: { genre },
+      skip: !genre,
+   });
 
    const books = result.data?.allBooks ? result.data.allBooks : [];
+
+   const filteredBooks = result.data?.booksByGenre
+      ? result.data.booksByGenre
+      : [];
 
    const genres = [
       ...new Set(
@@ -23,13 +26,11 @@ const Books = (props) => {
       'all genres',
    ];
 
-   const filteredBooks = books.filter((book) => {
-      if (genre === 'all genres') {
-         return books;
-      }
+   useEffect(() => {}, []);
 
-      return book.genres.find((g) => g === genre);
-   });
+   if (!props.show) {
+      return null;
+   }
 
    return (
       <>
@@ -43,13 +44,21 @@ const Books = (props) => {
                      <th>author</th>
                      <th>published</th>
                   </tr>
-                  {filteredBooks.map((a) => (
-                     <tr key={a.title}>
-                        <td>{a.title}</td>
-                        <td>{a.author.name}</td>
-                        <td>{a.published}</td>
-                     </tr>
-                  ))}
+                  {genre && genre !== 'all genres'
+                     ? filteredBooks.map((a) => (
+                          <tr key={a.title}>
+                             <td>{a.title}</td>
+                             <td>{a.author.name}</td>
+                             <td>{a.published}</td>
+                          </tr>
+                       ))
+                     : books.map((a) => (
+                          <tr key={a.title}>
+                             <td>{a.title}</td>
+                             <td>{a.author.name}</td>
+                             <td>{a.published}</td>
+                          </tr>
+                       ))}
                </tbody>
             </table>
          </div>
