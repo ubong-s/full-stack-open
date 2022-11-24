@@ -1,11 +1,13 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { ALL_AUTHORS, ALL_BOOKS, EDIT_AUTHOR_YEAR } from '../queries';
 
-const UpdateAuthor = (props) => {
-   const results = useQuery(ALL_AUTHORS);
+const UpdateAuthor = ({ setError, authors }) => {
    const [editAuthor] = useMutation(EDIT_AUTHOR_YEAR, {
       refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }],
+      onError: (error) => {
+         setError(error.graphQLErrors[0].message);
+      },
    });
    const [name, setName] = useState('');
    const [born, setBorn] = useState('');
@@ -15,15 +17,8 @@ const UpdateAuthor = (props) => {
 
       editAuthor({ variables: { name: name.trim(), born: Number(born) } });
 
-      setName('');
       setBorn('');
    };
-
-   if (!props.show) {
-      return null;
-   }
-
-   const authors = results.data?.allAuthors ? results.data.allAuthors : [];
 
    return (
       <div>
@@ -36,6 +31,9 @@ const UpdateAuthor = (props) => {
                      setName(target.value);
                   }}
                >
+                  <option value='' defaultValue>
+                     Select name
+                  </option>
                   {authors.map((author) => {
                      return (
                         <option key={author.id} value={author.name}>
