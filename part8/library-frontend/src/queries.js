@@ -21,6 +21,7 @@ export const ALL_BOOKS = gql`
          id
          published
          title
+         genres
       }
    }
 `;
