@@ -1,5 +1,30 @@
 import { gql } from '@apollo/client';
 
+export const CURRENT_USER = gql`
+   query currentUser {
+      me {
+         username
+         favouriteGenre
+      }
+   }
+`;
+
+export const RECOMMENDED = gql`
+   query recommended {
+      me {
+         username
+         favouriteGenre
+      }
+      recommended {
+         title
+         published
+         author {
+            name
+         }
+      }
+   }
+`;
+
 export const ALL_AUTHORS = gql`
    query Authors {
       allAuthors {

@@ -65,6 +65,7 @@ const typeDefs = gql`
       authorCount: Int!
       allBooks(author: String, genre: String): [Book!]!
       allAuthors: [Author!]!
+      recommended: [Book!]!
       me: User
    }
 `;
@@ -116,6 +117,13 @@ const resolvers = {
 
             return updateAuthors;
          }
+      },
+      recommended: async (root, args, context) => {
+         const currentUser = context.currentUser;
+
+         return Book.find({
+            genres: { $in: currentUser.favouriteGenre },
+         }).populate('author');
       },
       me: (root, args, context) => {
          return context.currentUser;
