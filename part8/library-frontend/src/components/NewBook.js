@@ -4,10 +4,16 @@ import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries';
 
 const NewBook = ({ setError, show, setPage }) => {
    const [addBook, result] = useMutation(ADD_BOOK, {
-      refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
       onError: (error) => {
          console.log(error);
          setError(error.graphQLErrors[0].message);
+      },
+      update: (cache, response) => {
+         cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+            return {
+               allBooks: allBooks.concat(response.data.addBook),
+            };
+         });
       },
    });
 

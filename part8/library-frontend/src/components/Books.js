@@ -6,7 +6,6 @@ const Books = (props) => {
    const [genre, setGenre] = useState('');
    const result = useQuery(ALL_BOOKS_GENRE, {
       variables: { genre },
-      skip: !genre,
    });
 
    const books = result.data?.allBooks ? result.data.allBooks : [];
